@@ -2,24 +2,35 @@
   --background: #ffffff;
   --foreground: #171717;
 }
+@font-face {
+  font-family: 'NanumSquare-Bold';
+  src: url('./fonts/NanumSquareB.otf') format('opentype'); /* OTF 형식 */
+}
 
-@media (prefers-color-scheme: dark) {
+@font-face {
+  font-family: 'NanumSquare-Regular';
+  src: url('./fonts//NanumSquareR.otf') format('opentype');
+}
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
+/* 기본 모바일 레이아웃에서 적용 */
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  background-color: rgba(249, 250, 251, 1);
+  height: 100%;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'NanumSquare-Regular';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -35,8 +46,21 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+} */
+
+/* 태블릿 */
+@media (min-width: 376px) {
+  body {
+  }
+}
+
+/* 노트북 */
+@media (min-width: 745px) {
+}
+body {
+  padding-bottom: 30px;
 }

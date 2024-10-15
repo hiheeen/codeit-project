@@ -1,0 +1,72 @@
+import styled from 'styled-components';
+import CheckBox from '../../public/images/CheckBox.png';
+import CheckBoxDone from '../../public/images/CheckBoxDone.png';
+import Image from 'next/image';
+import Link from 'next/link';
+import { BASE_URL } from '@/app/constants';
+import { TodoType } from './TodoList';
+import { TodoDetailType } from './TodoDetail';
+interface ITodoItemProps {
+  //   handleToggle: () => Promise<void>;
+  todo: TodoType;
+  setNewName: React.Dispatch<React.SetStateAction<string>>;
+  todoDetail: TodoDetailType;
+  newName: string;
+}
+
+const TodoDetailItem = ({
+  todo,
+  //   handleToggle,
+  //   setTodoDetail,
+  setNewName,
+  newName,
+  todoDetail,
+}: ITodoItemProps) => {
+  const { id, name, isCompleted } = todo;
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewName(e.target.value);
+  };
+  return (
+    <Container isCompleted={isCompleted}>
+      <Image
+        // onClick={handleToggle}
+        src={isCompleted ? CheckBoxDone : CheckBox}
+        alt="체크박스"
+        width={32}
+        height={32}
+      />
+      <Name>
+        <NameInput value={name} onChange={handleNameChange} />
+      </Name>
+    </Container>
+  );
+};
+
+export default TodoDetailItem;
+const NameInput = styled.input`
+  all: unset;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+`;
+
+const Container = styled.div<{ isCompleted: boolean }>`
+  margin-top: 16px;
+  font-size: 20px;
+  width: 100%;
+  border-radius: 24px;
+  border: 2px solid ${({ theme }) => theme.colors.slate900};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 9px;
+  background-color: ${({ isCompleted, theme }) =>
+    isCompleted ? theme.colors.violet100 : theme.colors.white};
+  text-decoration: underline;
+`;
+
+const Name = styled.div`
+  margin-left: 10px;
+  color: ${({ theme }) => theme.colors.slate800};
+`;

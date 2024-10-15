@@ -1,0 +1,20 @@
+import Image from 'next/image';
+import styles from './page.module.css';
+import { BASE_URL } from '../constants';
+import TodoList, { TodoType } from '@/components/todo/TodoList';
+
+export async function getTodos(): Promise<TodoType[]> {
+  const response = await fetch(`${BASE_URL}/items`, {
+    cache: 'no-store', // 매번 최신 데이터를 가져오기 위해 사용
+  });
+
+  return await response.json();
+}
+export default async function Home() {
+  const todos = await getTodos();
+  return (
+    <div>
+      <TodoList initialTodos={todos} />
+    </div>
+  );
+}
