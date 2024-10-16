@@ -1,5 +1,5 @@
-const Loading = () => {
-  return <div>Loading..</div>;
+const LoadingTodo = () => {
+  return <div>Loading todo..</div>;
 };
 
-export default Loading;
+export default LoadingTodo;

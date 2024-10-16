@@ -8,6 +8,7 @@ const theme = {
     slate200: '#E2E8F0',
     slate100: '#F1F5F9',
     violet600: '#7C3AED',
+    violet200: '#DDD6FE',
     violet100: '#EDE9FE',
     rose500: '#F43F5E',
     lime300: '#BEF264',

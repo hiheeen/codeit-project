@@ -8,7 +8,6 @@ const Container = styled.div`
   max-width: 1200px;
   @media (min-width: 376px) {
     padding: 0 24px;
-    max-width: 696px;
   }
 
   /* 데스크탑 */

@@ -2,6 +2,7 @@
 
 import Button from './common/Button';
 import AddSmall from '../public/images/AddSmall.png';
+import AddSmallDark from '../public/images/AddSmallDark.png';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { BASE_URL } from '@/app/constants';
@@ -66,11 +67,12 @@ const InputSection = ({ todos, setTodos }: IInputSectionProps) => {
         onKeyDown={handleKeyPress}
       />
       <Button
+        classNameString="text"
         handleClick={handleAddTodo}
-        bgcolor={todoValue ? 'violet600' : 'slate200'}
-        textcolor={todoValue ? 'white' : 'slate700'}
-        children="+ 추가하기"
-        // imageSrc={AddSmall}
+        $bgcolor={todoValue ? 'violet600' : 'slate200'}
+        $textcolor={todoValue ? 'white' : 'slate700'}
+        children="추가하기"
+        imageSrc={todoValue ? AddSmall : AddSmallDark}
       />
     </Container>
   );
@@ -80,6 +82,9 @@ export default InputSection;
 
 const Input = styled.input`
   all: unset;
+  font-size: 16px;
+  font-weight: 400;
+  color: #0f172a;
   line-height: 56px;
   background-color: #f1f5f9;
   border: 2px solid #0f172a;
@@ -87,7 +92,7 @@ const Input = styled.input`
   border-radius: 24px;
   margin-right: 16px;
   box-shadow: 2px 2px 0px #0f172a;
-  height: 56px;
+  height: 52px;
   padding: 0 24px;
   ::placeholder {
     color: #64748b;

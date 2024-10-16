@@ -27,7 +27,7 @@ const TodoDetailItem = ({
     setNewName(e.target.value);
   };
   return (
-    <Container isCompleted={isCompleted}>
+    <Container $iscompleted={isCompleted}>
       <Image
         // onClick={handleToggle}
         src={isCompleted ? CheckBoxDone : CheckBox}
@@ -36,7 +36,7 @@ const TodoDetailItem = ({
         height={32}
       />
       <Name>
-        <NameInput value={name} onChange={handleNameChange} />
+        <NameInput value={newName} onChange={handleNameChange} />
       </Name>
     </Container>
   );
@@ -51,7 +51,7 @@ const NameInput = styled.input`
   text-align: center;
 `;
 
-const Container = styled.div<{ isCompleted: boolean }>`
+const Container = styled.div<{ $iscompleted: boolean }>`
   margin-top: 16px;
   font-size: 20px;
   width: 100%;
@@ -61,12 +61,14 @@ const Container = styled.div<{ isCompleted: boolean }>`
   justify-content: center;
   align-items: center;
   padding: 9px;
-  background-color: ${({ isCompleted, theme }) =>
-    isCompleted ? theme.colors.violet100 : theme.colors.white};
+  background-color: ${({ $iscompleted, theme }) =>
+    $iscompleted ? theme.colors.violet200 : theme.colors.white};
   text-decoration: underline;
 `;
 
 const Name = styled.div`
   margin-left: 10px;
+  font-size: 20px;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.slate800};
 `;

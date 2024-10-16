@@ -12,6 +12,7 @@ import Memo from '../../public/images/Memo.png';
 import Button from '../common/Button';
 import CheckText from '../../public/images/Check.png';
 import XText from '../../public/images/X.png';
+import { useRouter } from 'next/navigation';
 
 export type TodoDetailType = {
   isCompleted: boolean;
@@ -26,15 +27,16 @@ interface ITodoDetailProps {
 }
 
 const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
+  const router = useRouter();
   const [todoDetail, setTodoDetail] =
     useState<TodoDetailType>(initialTodoDetail);
-  const { id, name: initialName, isCompleted } = initialTodoDetail;
-  const [newName, setNewName] = useState<string>(initialTodoDetail.name);
+  const { id, name: initialName, isCompleted, imageUrl } = initialTodoDetail;
+  const [newName, setNewName] = useState<string>(initialName);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
     initialTodoDetail.imageUrl
   ); // 미리보기 URL
-  const [memo, setMemo] = useState(initialTodoDetail.memo);
+  const [memo, setMemo] = useState<string>(initialTodoDetail.memo || '');
   const [isChanged, setIsChanged] = useState<boolean>(false);
 
   useEffect(() => {
@@ -68,20 +70,50 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
       setImagePreview(URL.createObjectURL(file));
     }
   };
-  const handleUpdate = async () => {
-    const formData = new FormData();
-    formData.append('name', newName);
-    formData.append('memo', memo);
-    if (image) {
-      formData.append('image', image); // 이미지 첨부
-    }
 
+  const getImageUrl = async (): Promise<string | null> => {
+    if (image) {
+      const formData = new FormData();
+      formData.append('image', image);
+      try {
+        const response = await fetch(`${BASE_URL}/images/upload`, {
+          method: 'POST',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          body: formData,
+        });
+        const json = await response.json();
+        return json.url;
+      } catch (error) {
+        console.error('Failed to upload image', error);
+        return null;
+      }
+    }
+    return '';
+  };
+  const handleUpdate = async () => {
+    const imageUrl = await getImageUrl();
+    const formData = {
+      name: newName,
+      memo: memo,
+      imageUrl: imageUrl,
+      isCompleted: isCompleted,
+    };
+    console.log(formData, 'formData');
     try {
-      await fetch(`${BASE_URL}/items/${id}`, {
+      const response = await fetch(`${BASE_URL}/items/${id}`, {
         method: 'PATCH',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+      const json = await response.json();
+      console.log(json, '수정에 대한 응답');
       alert('할 일이 수정되었습니다.');
+      setIsChanged(false);
+      router.refresh();
       window.location.href = '/';
     } catch (error) {
       console.error('Error updating todo:', error);
@@ -103,91 +135,100 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
 
   return (
     <Container>
-      <TodoDetailItem
-        todo={{ name: newName, id, isCompleted }}
-        // handleToggle={() => handleToggle(id)}
-        setNewName={setNewName}
-        newName={newName}
-        todoDetail={todoDetail}
-      />
-      <ResponsiveContainer>
-        {/* 이미지 */}
-        {imagePreview ? (
-          <ImageContainer>
-            <ImagePreview src={imagePreview} alt="이미지 프리뷰" />
-            <Label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              <AbsoluteImage
-                src={EditButton}
-                width={64}
-                height={64}
-                alt="수정 버튼"
-              />
-            </Label>
-          </ImageContainer>
-        ) : (
-          <ImageContainer>
-            <Label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+      <Wrapper>
+        <TodoDetailItem
+          todo={{ name: newName, id, isCompleted }}
+          // handleToggle={() => handleToggle(id)}
+          setNewName={setNewName}
+          newName={newName}
+          todoDetail={todoDetail}
+        />
+        <ResponsiveContainer>
+          {/* 이미지 */}
+          {imagePreview ? (
+            <ImageContainer>
+              <ImagePreview src={imagePreview} alt="이미지 프리뷰" />
+              <Label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                <AbsoluteImage
+                  src={EditButton}
+                  width={64}
+                  height={64}
+                  alt="수정 버튼"
+                />
+              </Label>
+            </ImageContainer>
+          ) : (
+            <ImageContainer>
+              {imageUrl && <ImagePreview src={imageUrl} alt="이미지" />}
+              <Label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
 
-              <AbsoluteImage
-                src={PlusButton}
-                width={64}
-                height={64}
-                alt="추가 버튼"
-              />
-            </Label>
-          </ImageContainer>
-        )}
+                <AbsoluteImage
+                  src={PlusButton}
+                  width={64}
+                  height={64}
+                  alt="추가 버튼"
+                />
+              </Label>
+            </ImageContainer>
+          )}
 
-        {/* 메모 */}
-        <TextBox>
-          <MemoText>Memo</MemoText>
-          <TextArea
-            value={memo}
-            onChange={e => setMemo(e.target.value)}
-            rows={4}
+          {/* 메모 */}
+          <TextBox>
+            <MemoText>Memo</MemoText>
+            <TextArea
+              value={memo}
+              onChange={e => setMemo(e.target.value)}
+              rows={4}
+            />
+            <div></div>
+          </TextBox>
+        </ResponsiveContainer>
+
+        {/* 버튼 */}
+        <ButtonContainer>
+          <Button
+            $bgcolor={isChanged ? 'lime300' : 'slate200'}
+            $textcolor="slate900"
+            children="수정완료"
+            handleClick={handleUpdate}
+            imageSrc={CheckText}
           />
-          <div></div>
-        </TextBox>
-      </ResponsiveContainer>
-
-      {/* 버튼 */}
-      <ButtonContainer>
-        <Button
-          bgcolor={isChanged ? 'lime300' : 'slate200'}
-          textcolor="slate900"
-          children="수정하기"
-          handleClick={handleUpdate}
-          imageSrc={CheckText}
-        />
-        <Button
-          bgcolor="rose500"
-          textcolor="white"
-          children="삭제하기"
-          handleClick={handleDelete}
-          imageSrc={XText}
-        />
-      </ButtonContainer>
+          <Button
+            $bgcolor="rose500"
+            $textcolor="white"
+            children="삭제하기"
+            handleClick={handleDelete}
+            imageSrc={XText}
+          />
+        </ButtonContainer>
+      </Wrapper>
     </Container>
   );
 };
 
 export default TodoDetail;
 const Container = styled.div`
+  width: 100%;
+  background-color: #ffffff;
+`;
+const Wrapper = styled.div`
+  background-color: #ffffff;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   @media (min-width: 745px) {
-    padding: 0 50px;
+    margin: 0 50px;
   }
 `;
 const ResponsiveContainer = styled.div`
@@ -223,12 +264,12 @@ const ImagePreview = styled.img`
 const MemoText = styled.div`
   color: #92400e;
   font-weight: 800;
-  font-family: 'NanumSquare-Bold';
   font-size: 16px;
 `;
 const TextArea = styled.textarea`
   all: unset;
   color: #1e293b;
+  font-weight: 400;
   text-align: center;
   width: 100%;
 `;

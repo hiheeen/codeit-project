@@ -1,6 +1,19 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --background: #ffffff;
+  --foreground: #171717; */
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --violet-600: #7c3aed;
+  --violet-100: #ede9fe;
+  --rose-500: #f43f5e;
+  --lime-300: #bef264;
+  --amber-800: #92400e;
+  --white: #ffffff;
 }
 @font-face {
   font-family: 'NanumSquare-Bold';
@@ -11,14 +24,7 @@
   font-family: 'NanumSquare-Regular';
   src: url('./fonts//NanumSquareR.otf') format('opentype');
 }
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
 
-/* 기본 모바일 레이아웃에서 적용 */
 html,
 body {
   max-width: 100vw;
@@ -46,21 +52,6 @@ a {
   text-decoration: none;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-} */
-
-/* 태블릿 */
-@media (min-width: 376px) {
-  body {
-  }
-}
-
-/* 노트북 */
-@media (min-width: 745px) {
-}
 body {
   padding-bottom: 30px;
 }

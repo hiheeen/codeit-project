@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 const Container = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   margin: 0 auto;
   width: 100%;
   height: 60px;
@@ -20,12 +20,14 @@ const Container = styled.div`
   @media (min-width: 376px) and (max-width: 744px) {
     padding: 10px 24px;
   }
-
-  /* @media (min-width: 745px) {
-    padding: 10px 360px;
-  } */
 `;
 
+const Wrapper = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: flex-start;
+`;
 const Logo = styled.div`
   width: auto;
   height: 40px;
@@ -50,26 +52,28 @@ const Header = () => {
   }, []); // 빈 배열: 마운트 시 한 번만 실행
   return (
     <Container>
-      <Link href="/">
-        {/* <ResponsiveImage/> */}
-        <Logo>
-          {windowWidth > 375 ? (
-            <Image
-              src="/images/LogoLarge.png"
-              alt="TodoList"
-              width={151} // 기본 너비
-              height={40} // 기본 높이
-            />
-          ) : (
-            <Image
-              src="/images/LogoSmall.png"
-              alt="TodoList"
-              width={71} // 기본 너비
-              height={40} // 기본 높이
-            />
-          )}
-        </Logo>
-      </Link>
+      <Wrapper>
+        <Link href="/">
+          {/* <ResponsiveImage/> */}
+          <Logo>
+            {windowWidth > 375 ? (
+              <Image
+                src="/images/LogoLarge.png"
+                alt="TodoList"
+                width={151} // 기본 너비
+                height={40} // 기본 높이
+              />
+            ) : (
+              <Image
+                src="/images/LogoSmall.png"
+                alt="TodoList"
+                width={71} // 기본 너비
+                height={40} // 기본 높이
+              />
+            )}
+          </Logo>
+        </Link>
+      </Wrapper>
     </Container>
   );
 };

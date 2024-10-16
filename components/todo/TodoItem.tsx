@@ -14,7 +14,7 @@ const TodoItem = ({ todo, handleToggle }: ITodoItemProps) => {
   const { id, name, isCompleted } = todo;
   const handleClickItem = () => {};
   return (
-    <Container onClick={handleClickItem} isCompleted={isCompleted}>
+    <Container onClick={handleClickItem} $iscompleted={isCompleted}>
       {isCompleted ? (
         <Image
           onClick={handleToggle}
@@ -33,7 +33,9 @@ const TodoItem = ({ todo, handleToggle }: ITodoItemProps) => {
         />
       )}
       <Name>
-        <Link href={`/items/${id}`}>{name}</Link>
+        <Link href={`/items/${id}`} prefetch>
+          {name}
+        </Link>
       </Name>
     </Container>
   );
@@ -42,7 +44,9 @@ const TodoItem = ({ todo, handleToggle }: ITodoItemProps) => {
 export default TodoItem;
 
 // 상위 div 스타일
-const Container = styled.div<{ isCompleted: boolean }>`
+const Container = styled.div<{ $iscompleted: boolean }>`
+  font-size: 16px;
+  font-weight: 400;
   margin-top: 16px;
   width: 100%;
   height: 50px;
@@ -51,12 +55,12 @@ const Container = styled.div<{ isCompleted: boolean }>`
   display: flex;
   align-items: center;
   padding: 9px;
-  background-color: ${({ isCompleted, theme }) =>
-    isCompleted
+  background-color: ${({ $iscompleted, theme }) =>
+    $iscompleted
       ? theme.colors.violet100
       : theme.colors.white}; /* 완료 상태에 따른 배경색 */
-  text-decoration: ${({ isCompleted }) =>
-    isCompleted
+  text-decoration: ${({ $iscompleted }) =>
+    $iscompleted
       ? 'line-through'
       : 'none'}; /* 완료 상태에 따른 텍스트 데코레이션 */
   /* transition: background-color 0.3s ease, text-decoration 0.3s ease; */
