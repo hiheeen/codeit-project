@@ -28,7 +28,7 @@ interface ITodoDetailProps {
 
 const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
   const router = useRouter();
-  const [todoDetail, _] = useState<TodoDetailType>(initialTodoDetail);
+  const [todoDetail] = useState<TodoDetailType>(initialTodoDetail);
   const { id, name: initialName, isCompleted, imageUrl } = initialTodoDetail;
   const [newName, setNewName] = useState<string>(initialName);
   const [image, setImage] = useState<File | null>(null);
