@@ -1,7 +1,7 @@
 import { BASE_URL } from '../constants';
 import TodoList, { TodoType } from '@/components/todo/TodoList';
 
-export async function getTodos(): Promise<TodoType[]> {
+async function getTodos(): Promise<TodoType[]> {
   const response = await fetch(`${BASE_URL}/items`, {
     cache: 'no-store', // 매번 최신 데이터를 가져오기 위해 사용
   });
