@@ -1,6 +1,6 @@
 'use client';
 import { BASE_URL } from '@/app/constants';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import InputSection from '../InputSection';
 import styled from 'styled-components';
 import TodoItem from './TodoItem';

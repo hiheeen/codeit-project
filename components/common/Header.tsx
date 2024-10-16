@@ -58,14 +58,14 @@ const Header = () => {
           <Logo>
             {windowWidth > 375 ? (
               <Image
-                src="/images/LogoLarge.png"
+                src={LogoLarge}
                 alt="TodoList"
                 width={151} // 기본 너비
                 height={40} // 기본 높이
               />
             ) : (
               <Image
-                src="/images/LogoSmall.png"
+                src={LogoSmall}
                 alt="TodoList"
                 width={71} // 기본 너비
                 height={40} // 기본 높이

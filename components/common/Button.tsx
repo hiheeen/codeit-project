@@ -5,7 +5,7 @@ import styled from 'styled-components';
 // styled-component사용하여 props를 받아서 커스터마이징 가능하게 함.
 
 interface IButtonProps {
-  children: string;
+  text: string;
   $bgcolor?: string;
   $textcolor?: string;
   imageSrc?: StaticImageData;
@@ -48,7 +48,7 @@ const Container = styled.button<{
 `;
 const Button = ({
   handleClick,
-  children,
+  text,
   $bgcolor,
   $textcolor,
   imageSrc,
@@ -62,7 +62,7 @@ const Button = ({
       $class={classNameString}
     >
       {imageSrc && <Image src={imageSrc} alt="icon" width={16} height={16} />}
-      <div className={classNameString}>{children}</div>
+      <div className={classNameString}>{text}</div>
     </Container>
   );
 };

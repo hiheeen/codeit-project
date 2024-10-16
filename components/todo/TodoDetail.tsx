@@ -28,8 +28,7 @@ interface ITodoDetailProps {
 
 const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
   const router = useRouter();
-  const [todoDetail, setTodoDetail] =
-    useState<TodoDetailType>(initialTodoDetail);
+  const [todoDetail, _] = useState<TodoDetailType>(initialTodoDetail);
   const { id, name: initialName, isCompleted, imageUrl } = initialTodoDetail;
   const [newName, setNewName] = useState<string>(initialName);
   const [image, setImage] = useState<File | null>(null);
@@ -78,9 +77,6 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
       try {
         const response = await fetch(`${BASE_URL}/images/upload`, {
           method: 'POST',
-          //   headers: {
-          //     'Content-Type': 'application/json',
-          //   },
           body: formData,
         });
         const json = await response.json();
@@ -199,14 +195,14 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
           <Button
             $bgcolor={isChanged ? 'lime300' : 'slate200'}
             $textcolor="slate900"
-            children="수정완료"
+            text="수정완료"
             handleClick={handleUpdate}
             imageSrc={CheckText}
           />
           <Button
             $bgcolor="rose500"
             $textcolor="white"
-            children="삭제하기"
+            text="삭제하기"
             handleClick={handleDelete}
             imageSrc={XText}
           />

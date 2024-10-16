@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import CheckBox from '../../public/images/CheckBox.png';
 import CheckBoxDone from '../../public/images/CheckBoxDone.png';
 import Image from 'next/image';
-import Link from 'next/link';
-import { BASE_URL } from '@/app/constants';
 import { TodoType } from './TodoList';
 import { TodoDetailType } from './TodoDetail';
 interface ITodoItemProps {
@@ -14,15 +12,8 @@ interface ITodoItemProps {
   newName: string;
 }
 
-const TodoDetailItem = ({
-  todo,
-  //   handleToggle,
-  //   setTodoDetail,
-  setNewName,
-  newName,
-  todoDetail,
-}: ITodoItemProps) => {
-  const { id, name, isCompleted } = todo;
+const TodoDetailItem = ({ todo, setNewName, newName }: ITodoItemProps) => {
+  const { isCompleted } = todo;
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(e.target.value);
   };

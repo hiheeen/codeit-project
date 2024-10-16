@@ -1,5 +1,3 @@
-import Image from 'next/image';
-import styles from './page.module.css';
 import { BASE_URL } from '../constants';
 import TodoList, { TodoType } from '@/components/todo/TodoList';
 

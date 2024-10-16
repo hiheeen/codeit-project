@@ -13,7 +13,7 @@ interface IInputSectionProps {
   todos: TodoType[];
 }
 
-const InputSection = ({ todos, setTodos }: IInputSectionProps) => {
+const InputSection = ({ setTodos }: IInputSectionProps) => {
   const [todoValue, setTodoValue] = useState<string>('');
   const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 입력값 감지
@@ -71,7 +71,7 @@ const InputSection = ({ todos, setTodos }: IInputSectionProps) => {
         handleClick={handleAddTodo}
         $bgcolor={todoValue ? 'violet600' : 'slate200'}
         $textcolor={todoValue ? 'white' : 'slate700'}
-        children="추가하기"
+        text="추가하기"
         imageSrc={todoValue ? AddSmall : AddSmallDark}
       />
     </Container>

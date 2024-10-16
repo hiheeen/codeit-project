@@ -3,7 +3,6 @@ import CheckBox from '../../public/images/CheckBox.png';
 import CheckBoxDone from '../../public/images/CheckBoxDone.png';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BASE_URL } from '@/app/constants';
 import { TodoType } from './TodoList';
 interface ITodoItemProps {
   handleToggle: () => Promise<void>;
