@@ -1,7 +1,5 @@
 'use client';
 import Link from 'next/link';
-import LogoSmall from '../public/images/LogoSmall.png';
-import LogoLarge from '../public/images/LogoLarge.png';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -58,14 +56,14 @@ const Header = () => {
           <Logo>
             {windowWidth > 375 ? (
               <Image
-                src={LogoLarge}
+                src="/images/LogoLarge.png"
                 alt="TodoList"
                 width={151} // 기본 너비
                 height={40} // 기본 높이
               />
             ) : (
               <Image
-                src={LogoSmall}
+                src="/images/LogoSmall.png"
                 alt="TodoList"
                 width={71} // 기본 너비
                 height={40} // 기본 높이
