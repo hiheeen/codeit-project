@@ -41,8 +41,8 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
   useEffect(() => {
     if (
       newName !== initialName ||
-      imagePreview !== initialImageUrl ||
-      memo !== initialMemo
+      (imagePreview !== '' && imagePreview !== initialImageUrl) ||
+      (memo !== '' && memo !== initialMemo)
     ) {
       setIsChanged(true);
     } else {
