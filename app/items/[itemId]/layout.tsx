@@ -15,6 +15,7 @@ const Layout = styled.div`
   margin: 0 auto;
   background-color: #ffffff;
   padding: 0 16px; // 기본 모바일
+  height: 100vh;
   /* 태블릿 */
   @media (min-width: 480px) {
     padding: 0 24px;

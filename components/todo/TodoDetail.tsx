@@ -219,6 +219,8 @@ export default TodoDetail;
 const Container = styled.div`
   width: 100%;
   background-color: #ffffff;
+  padding-bottom: 20px;
+  height: 100%;
 `;
 const Wrapper = styled.div`
   background-color: #ffffff;
@@ -246,6 +248,7 @@ const ButtonContainer = styled.div`
     margin-right: 10px;
   }
   padding-top: 24px;
+  padding-bottom: 24px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   max-width: 1200px;
   background-color: #f9fafb;
 `;
