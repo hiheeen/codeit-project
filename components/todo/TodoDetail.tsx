@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import TodoDetailItem from './TodoDetailItem';
-import { BASE_URL } from '@/app/constants';
 import styled from 'styled-components';
 import Image from 'next/image';
 import ImageUploadBackground from '../../public/images/ImageUpload.png';
@@ -13,44 +12,49 @@ import Button from '../common/Button';
 import CheckText from '../../public/images/Check.png';
 import XText from '../../public/images/X.png';
 import { useRouter } from 'next/navigation';
+import { GetTodoDetailResponseType } from '@/types';
+import { deleteItem, getImageUrl, updateItem } from '@/services/todoServices';
 
-export type TodoDetailType = {
-  isCompleted: boolean;
-  imageUrl: string;
-  memo: string;
-  name: string;
-  tenantId: string;
-  id: number;
-};
 interface ITodoDetailProps {
-  initialTodoDetail: TodoDetailType;
+  initialTodoDetail: GetTodoDetailResponseType;
 }
 
 const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
   const router = useRouter();
-  const [todoDetail] = useState<TodoDetailType>(initialTodoDetail);
-  const { id, name: initialName, isCompleted, imageUrl } = initialTodoDetail;
+  const [todoDetail] = useState<GetTodoDetailResponseType>(initialTodoDetail);
+  const {
+    id,
+    name: initialName,
+    isCompleted,
+    imageUrl: initialImageUrl,
+    memo: initialMemo,
+  } = initialTodoDetail;
   const [newName, setNewName] = useState<string>(initialName);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
-    initialTodoDetail.imageUrl
-  ); // 미리보기 URL
-  const [memo, setMemo] = useState<string>(initialTodoDetail.memo || '');
+    initialImageUrl
+  ); // 이미지 업로드 후 미리보기 url
+  const [memo, setMemo] = useState<string>(initialMemo || '');
   const [isChanged, setIsChanged] = useState<boolean>(false);
 
+  // 변경사항이 있을 경우를 감지하여 '수정'버튼을 활성화 합니다.
   useEffect(() => {
     if (
       newName !== initialName ||
-      image !== null ||
-      memo !== initialTodoDetail.memo
+      imagePreview !== initialImageUrl ||
+      memo !== initialMemo
     ) {
       setIsChanged(true);
     } else {
       setIsChanged(false);
     }
   }, [newName, image, memo, initialName, initialTodoDetail.memo]);
+
+  // 이미지 업로드 핸들러
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
+    //이미지가 올라온 경우
     if (file) {
       const fileName = file.name;
       const validFileName = /^[a-zA-Z]+\.(jpg|png|jpeg|gif)$/; // 영어 알파벳 + .jpg, .png, .jpeg, .gif 확장자만 허용
@@ -66,21 +70,19 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
       }
 
       setImage(file);
+      // 미리보기 세팅
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const getImageUrl = async (): Promise<string | null> => {
+  // 이미지 url 핸들러
+  const getImageUrlHandler = async (): Promise<string | null> => {
     if (image) {
       const formData = new FormData();
       formData.append('image', image);
       try {
-        const response = await fetch(`${BASE_URL}/images/upload`, {
-          method: 'POST',
-          body: formData,
-        });
-        const json = await response.json();
-        return json.url;
+        const response = await getImageUrl(formData);
+        return response.url;
       } catch (error) {
         console.error('Failed to upload image', error);
         return null;
@@ -88,44 +90,46 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
     }
     return '';
   };
+
+  // todo 수정 핸들러
   const handleUpdate = async () => {
-    const imageUrl = await getImageUrl();
+    if (!isChanged) {
+      alert('수정 사항이 없습니다');
+      return;
+    }
+    // 이미지 url을 먼저 받아옵니다.
+    const imageUrl = await getImageUrlHandler();
+
+    // imageUrl이 유효한 값일 경우에만 form에 추가합니다.
     const formData = {
       name: newName,
       memo: memo,
-      imageUrl: imageUrl,
       isCompleted: isCompleted,
+      ...(imageUrl && { imageUrl: imageUrl }),
     };
-    console.log(formData, 'formData');
     try {
-      const response = await fetch(`${BASE_URL}/items/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const json = await response.json();
-      console.log(json, '수정에 대한 응답');
+      await updateItem(id, formData);
       alert('할 일이 수정되었습니다.');
       setIsChanged(false);
       router.refresh();
+
+      // 할 일 목록 페이지로 이동합니다.
       window.location.href = '/';
     } catch (error) {
-      console.error('Error updating todo:', error);
+      console.error('update todo error', error);
     }
   };
 
   const handleDelete = async () => {
     try {
-      await fetch(`${BASE_URL}/items/${id}`, {
-        method: 'DELETE',
-      });
+      await deleteItem(id);
       alert('할 일이 삭제되었습니다.');
-      // 할 일 목록 페이지로 이동
+      router.refresh();
+
+      // 할 일 목록 페이지로 이동합니다.
       window.location.href = '/';
     } catch (error) {
-      console.error('Error deleting todo:', error);
+      console.error('delete todo error', error);
     }
   };
 
@@ -134,13 +138,12 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
       <Wrapper>
         <TodoDetailItem
           todo={{ name: newName, id, isCompleted }}
-          // handleToggle={() => handleToggle(id)}
           setNewName={setNewName}
           newName={newName}
           todoDetail={todoDetail}
         />
         <ResponsiveContainer>
-          {/* 이미지 */}
+          {/* 기존 이미지가 있을 때 */}
           {imagePreview ? (
             <ImageContainer>
               <ImagePreview src={imagePreview} alt="이미지 프리뷰" />
@@ -159,8 +162,8 @@ const TodoDetail = ({ initialTodoDetail }: ITodoDetailProps) => {
               </Label>
             </ImageContainer>
           ) : (
+            // 기존 이미지가 없을 때
             <ImageContainer>
-              {imageUrl && <ImagePreview src={imageUrl} alt="이미지" />}
               <Label>
                 <input
                   type="file"
@@ -223,7 +226,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media (min-width: 745px) {
+  @media (min-width: 1025px) {
     margin: 0 50px;
   }
 `;
@@ -231,7 +234,7 @@ const ResponsiveContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  @media (min-width: 745px) {
+  @media (min-width: 1025px) {
     display: grid;
     width: 100%;
     grid-template-columns: 40% 60%;
@@ -255,7 +258,7 @@ const ImagePreview = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover; /* 이미지를 컨테이너에 맞게 채움 */
-  border-radius: 24px; /* 컨테이너의 모서리 반경과 맞춤 */
+  border-radius: 24px;
 `;
 const MemoText = styled.div`
   color: #92400e;
@@ -292,6 +295,7 @@ const Label = styled.label`
   right: 9px;
   cursor: pointer;
 
+  // 이미지 input 숨김
   input[type='file'] {
     display: none;
   }

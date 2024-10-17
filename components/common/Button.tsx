@@ -3,7 +3,7 @@ import Image, { StaticImageData } from 'next/image';
 import styled from 'styled-components';
 // 재사용 가능한 버튼 컴포넌트. 배경색과 텍스트 컬러 등을 동적으로 받도록 설정.
 // styled-component사용하여 props를 받아서 커스터마이징 가능하게 함.
-
+// 반응형 레이아웃에 따라 text와 크기 등을 관리하기 위해 별도의 props 설정
 interface IButtonProps {
   text: string;
   $bgcolor?: string;
@@ -13,39 +13,6 @@ interface IButtonProps {
   classNameString?: string;
 }
 
-const Container = styled.button<{
-  $bgcolor?: string;
-  $textcolor?: string;
-  $class?: string;
-}>`
-  all: unset;
-  font-size: 16px;
-  font-weight: 700;
-  border: 2px solid rgba(15, 23, 42, 1);
-  & > *:first-child {
-    margin-right: 5px;
-  }
-  border-radius: 24px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 168px;
-
-  @media (max-width: 376px) {
-    width: ${({ $class }) => ($class ? '56px' : '168px')};
-    min-width: 56px;
-    .text {
-      display: none;
-    }
-  }
-  height: 52px;
-  box-shadow: 2px 2px 0px #0f172a;
-  background-color: ${({ theme, $bgcolor }) =>
-    $bgcolor ? theme.colors[$bgcolor] : theme.colors.slate200};
-  color: ${({ theme, $textcolor }) =>
-    $textcolor ? theme.colors[$textcolor] : theme.colors.slate700};
-`;
 const Button = ({
   handleClick,
   text,
@@ -68,3 +35,38 @@ const Button = ({
 };
 
 export default Button;
+
+const Container = styled.button<{
+  $bgcolor?: string;
+  $textcolor?: string;
+  $class?: string;
+}>`
+  all: unset;
+  font-size: 16px;
+  font-weight: 700;
+  border: 2px solid rgba(15, 23, 42, 1);
+  & > *:first-child {
+    margin-right: 5px;
+  }
+  border-radius: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 168px;
+
+  @media (max-width: 480px) {
+    // 모바일 레이아웃에서의 text와 너비 조정
+    width: ${({ $class }) => ($class ? '56px' : '168px')};
+    min-width: 56px;
+    .text {
+      display: none;
+    }
+  }
+  height: 52px;
+  box-shadow: 2px 2px 0px #0f172a;
+  background-color: ${({ theme, $bgcolor }) =>
+    $bgcolor ? theme.colors[$bgcolor] : theme.colors.slate200};
+  color: ${({ theme, $textcolor }) =>
+    $textcolor ? theme.colors[$textcolor] : theme.colors.slate700};
+`;

@@ -23,12 +23,12 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/images/Favicon.png" />
       </head>
-      <ThemeProvider>
-        <body>
+      <body>
+        <ThemeProvider>
           <Header />
           <Layout>{children}</Layout>
-        </body>
-      </ThemeProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

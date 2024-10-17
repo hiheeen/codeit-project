@@ -1,3 +1,6 @@
+// 컬러시스템을 변수화 하여 사용.
+// 전역에 해당 객체를 공유하여 theme.colors.white 등으로 참조할 수 있습니다.
+
 const theme = {
   colors: {
     slate900: '#0F172A',
@@ -14,10 +17,6 @@ const theme = {
     lime300: '#BEF264',
     amber800: '#92400E',
     white: '#FFFFFF',
-  },
-  fonts: {
-    bold: 'NanumSquare-Bold',
-    regular: 'NanumSquare-Regular',
   },
 };
 

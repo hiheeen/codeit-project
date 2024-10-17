@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import CheckBox from '../../public/images/CheckBox.png';
 import CheckBoxDone from '../../public/images/CheckBoxDone.png';
 import Image from 'next/image';
-import { TodoType } from './TodoList';
-import { TodoDetailType } from './TodoDetail';
+import { GetTodoDetailResponseType, GetTodoResponseType } from '@/types';
+
+// 할 일 상세페이지 내의 check-list-detail 컴포넌트
 interface ITodoItemProps {
-  //   handleToggle: () => Promise<void>;
-  todo: TodoType;
+  todo: GetTodoResponseType;
   setNewName: React.Dispatch<React.SetStateAction<string>>;
-  todoDetail: TodoDetailType;
+  todoDetail: GetTodoDetailResponseType;
   newName: string;
 }
 
@@ -20,7 +20,6 @@ const TodoDetailItem = ({ todo, setNewName, newName }: ITodoItemProps) => {
   return (
     <Container $iscompleted={isCompleted}>
       <Image
-        // onClick={handleToggle}
         src={isCompleted ? CheckBoxDone : CheckBox}
         alt="체크박스"
         width={32}

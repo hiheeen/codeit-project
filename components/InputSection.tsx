@@ -5,12 +5,12 @@ import AddSmall from '../public/images/AddSmall.png';
 import AddSmallDark from '../public/images/AddSmallDark.png';
 import styled from 'styled-components';
 import { useState } from 'react';
-import { BASE_URL } from '@/app/constants';
-import { TodoType } from './todo/TodoList';
+import { GetTodoResponseType } from '@/types';
+import { postTodo } from '@/services/todoServices';
 
 interface IInputSectionProps {
-  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
-  todos: TodoType[];
+  setTodos: React.Dispatch<React.SetStateAction<GetTodoResponseType[]>>;
+  todos: GetTodoResponseType[];
 }
 
 const InputSection = ({ setTodos }: IInputSectionProps) => {
@@ -28,27 +28,20 @@ const InputSection = ({ setTodos }: IInputSectionProps) => {
     const formData = {
       name: todoValue,
     };
-    // todoValue를 추가하는 로직 추가 (ex. API 호출, 상태 업데이트)
+
+    // 입력한 할 일 POST 요청
     try {
-      const response = await fetch(`${BASE_URL}/items`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      const newTodo: TodoType = {
-        name: data.name,
+      const response = await postTodo(formData);
+      const newTodo: GetTodoResponseType = {
+        name: response.name,
         isCompleted: false,
-        id: data.id,
+        id: response.id,
       };
-      console.log(data, '추가한 할 일에 대한 응답');
+      // 클라이언트 배열에 추가하여 UI반영
       setTodos(todos => [...todos, newTodo]);
     } catch (error) {
-      console.error('할 일 추가에 실패하였음', error);
+      console.error('add todo error', error);
     }
-    console.log('할 일 추가:', todoValue);
     setTodoValue('');
   };
 
@@ -100,5 +93,5 @@ const Input = styled.input`
 `;
 const Container = styled.div`
   display: flex;
-  margin-top: 24px;
+  padding-top: 24px;
 `;

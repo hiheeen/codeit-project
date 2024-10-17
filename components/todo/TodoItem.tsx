@@ -3,17 +3,17 @@ import CheckBox from '../../public/images/CheckBox.png';
 import CheckBoxDone from '../../public/images/CheckBoxDone.png';
 import Image from 'next/image';
 import Link from 'next/link';
-import { TodoType } from './TodoList';
+import { GetTodoResponseType } from '@/types';
 interface ITodoItemProps {
-  handleToggle: () => Promise<void>;
-  todo: TodoType;
+  handleToggle: () => Promise<void>; // 완료 상태 변경 함수
+  todo: GetTodoResponseType; // GET todoList => map으로 얻은 item 타입
 }
 
 const TodoItem = ({ todo, handleToggle }: ITodoItemProps) => {
   const { id, name, isCompleted } = todo;
-  const handleClickItem = () => {};
+
   return (
-    <Container onClick={handleClickItem} $iscompleted={isCompleted}>
+    <Container $iscompleted={isCompleted}>
       {isCompleted ? (
         <Image
           onClick={handleToggle}
@@ -42,7 +42,6 @@ const TodoItem = ({ todo, handleToggle }: ITodoItemProps) => {
 
 export default TodoItem;
 
-// 상위 div 스타일
 const Container = styled.div<{ $iscompleted: boolean }>`
   font-size: 16px;
   font-weight: 400;
@@ -55,14 +54,9 @@ const Container = styled.div<{ $iscompleted: boolean }>`
   align-items: center;
   padding: 9px;
   background-color: ${({ $iscompleted, theme }) =>
-    $iscompleted
-      ? theme.colors.violet100
-      : theme.colors.white}; /* 완료 상태에 따른 배경색 */
+    $iscompleted ? theme.colors.violet100 : theme.colors.white};
   text-decoration: ${({ $iscompleted }) =>
-    $iscompleted
-      ? 'line-through'
-      : 'none'}; /* 완료 상태에 따른 텍스트 데코레이션 */
-  /* transition: background-color 0.3s ease, text-decoration 0.3s ease; */
+    $iscompleted ? 'line-through' : 'none'};
 `;
 
 const Name = styled.div`
